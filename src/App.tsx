@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Environment, ContactShadows } from '@react-three/drei'
+import { OrbitControls, Environment } from '@react-three/drei'
 import { Suspense } from 'react'
 import { Model } from './components/HomesteadMain'
 import './index.css' // Import the global styles we updated
