@@ -1,7 +1,10 @@
+import { useState } from "react";
 import Scene from "./components/Scene";
 import "./index.css"; // Import the global styles we updated
 
 function App() {
+  const [useCustomEnv, setUseCustomEnv] = useState(true);
+
   return (
     <div
       style={{
@@ -11,7 +14,7 @@ function App() {
         flexDirection: "column",
       }}
     >
-      <Scene />
+      <Scene useCustomEnv={useCustomEnv} />
       <div
         style={{
           position: "absolute",
@@ -28,6 +31,26 @@ function App() {
         <p style={{ margin: "5px 0", fontSize: "14px", opacity: 0.8 }}>
           Drag to rotate, scroll to zoom.
         </p>
+        <label
+          style={{
+            pointerEvents: "auto",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            fontSize: "14px",
+            cursor: "pointer",
+            marginTop: "6px",
+            userSelect: "none",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={useCustomEnv}
+            onChange={(e) => setUseCustomEnv(e.target.checked)}
+            style={{ cursor: "pointer" }}
+          />
+          Custom Environment
+        </label>
       </div>
     </div>
   );
