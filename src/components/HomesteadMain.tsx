@@ -76,7 +76,7 @@ function DropDownGroup({ stage, currentStage, children }: { stage: number, curre
   // Use position={[0, 0, z]} via interpolation to guarantee it applies correctly
   return (
     <a.group 
-      position={z.to((zVal) => [0, 0, zVal])} 
+      position={z.to((zVal) => [0, 0, zVal]) as any} 
       scale={scale}
     >
       {children}
