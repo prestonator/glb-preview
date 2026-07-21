@@ -8,17 +8,11 @@ function App() {
   return (
     <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Canvas camera={{ position: [50, 50, 50], fov: 50 }}>
-        {/* Basic lighting */}
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 10]} intensity={1} castShadow />
         
         <Suspense fallback={null}>
           <Model />
           {/* Environment map for realistic PBR reflections based on grill-me choice */}
-          <Environment preset="city" />
-          
-          {/* A nice shadow underneath */}
-          <ContactShadows position={[0, -0.1, 0]} opacity={0.6} scale={20} blur={2.5} far={10} />
+          <Environment preset="forest" />
         </Suspense>
 
         {/* Free orbit controls based on grill-me choice */}
