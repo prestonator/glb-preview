@@ -24,13 +24,14 @@ function CustomEnvironment() {
 
 interface SceneProps {
   useCustomEnv?: boolean;
+  currentStage?: number;
 }
 
-export function Scene({ useCustomEnv = true }: SceneProps) {
+export function Scene({ useCustomEnv = true, currentStage = 1 }: SceneProps) {
   return (
     <Canvas camera={{ position: [50, 50, 50], fov: 50 }}>
       <Suspense fallback={null}>
-        <Model />
+        <Model currentStage={currentStage} />
         
         {useCustomEnv ? (
           <CustomEnvironment />

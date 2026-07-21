@@ -5,9 +5,8 @@ Command: npx gltfjsx@6.5.3 public/homestead_main.glb -t -o src/components/Homest
 
 import * as THREE from 'three'
 import type { GLTF } from 'three-stdlib'
-
 import { useGLTF } from '@react-three/drei'
-
+import { motion } from 'framer-motion-3d'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -56,45 +55,170 @@ type GLTFResult = GLTF & {
   animations: any[]
 }
 
-export function Model(props: any) {
+export function Model({ currentStage = 1, ...props }: any) {
   const { nodes, materials } = useGLTF('/homestead_main.glb') as unknown as GLTFResult
+
+  // Helper for pop-in animation
+  const popIn = (stage: number) => ({
+    initial: { scale: 0 },
+    animate: { scale: currentStage >= stage ? 1 : 0 },
+    transition: { type: 'spring', bounce: 0.5, duration: 0.8 }
+  });
+
+  // Helper for drop-down animation. Since parent group has Math.PI/2 rotation on X,
+  // local Z axis is World UP. We drop from z = 5000.
+  const dropDown = (stage: number) => ({
+    initial: { z: 5000, scale: 0 },
+    animate: { 
+      z: currentStage >= stage ? 0 : 5000, 
+      scale: currentStage >= stage ? 1 : 0 
+    },
+    transition: { type: 'spring', bounce: 0.3, duration: 1.0 }
+  });
+
   return (
     <group {...props} dispose={null}>
       <group rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
-        <mesh geometry={nodes.Farm_House.geometry} material={materials.Farm_House_Material} />
-        <mesh geometry={nodes.Horse.geometry} material={materials.Horse_Material} />
-        <mesh geometry={nodes.House.geometry} material={materials.House_Material} />
-        <mesh geometry={nodes.Bonfire.geometry} material={materials.Bonfire_Well_Material} />
-        <mesh geometry={nodes.Hen.geometry} material={materials.Bonfire_Well_Material} />
-        <mesh geometry={nodes.Shovel4.geometry} material={materials.Bonfire_Well_Material} />
-        <mesh geometry={nodes.Trolley.geometry} material={materials.Bonfire_Well_Material} />
-        <mesh geometry={nodes.Water_Shower.geometry} material={materials.Bonfire_Well_Material} />
-        <mesh geometry={nodes.Well.geometry} material={materials.Bonfire_Well_Material} />
-        <mesh geometry={nodes.Ground001.geometry} material={materials.Ground_Material} />
-        <mesh geometry={nodes.House_Part.geometry} material={materials.Ground_Material} />
-        <mesh geometry={nodes.Plant_Sand.geometry} material={materials.Ground_Material} />
-        <mesh geometry={nodes.Road.geometry} material={materials.Ground_Material} />
-        <mesh geometry={nodes.Big_Fan.geometry} material={materials.Plants_Grass_Fan_Material} />
-        <mesh geometry={nodes.Grass.geometry} material={materials.Plants_Grass_Fan_Material} />
-        <mesh geometry={nodes.Plants.geometry} material={materials.Plants_Grass_Fan_Material} />
-        <mesh geometry={nodes.Hen_House.geometry} material={materials.Tent_Hen_House_Material} />
-        <mesh geometry={nodes.Lamp.geometry} material={materials.Tent_Hen_House_Material} />
-        <mesh geometry={nodes.Part.geometry} material={materials.Tent_Hen_House_Material} />
-        <mesh geometry={nodes.Pitch_Fork.geometry} material={materials.Tent_Hen_House_Material} />
-        <mesh geometry={nodes.Tent.geometry} material={materials.Tent_Hen_House_Material} />
-        <mesh geometry={nodes.Cut_Tree.geometry} material={materials.Tree_Fence_Sand_Material} />
-        <mesh geometry={nodes.Fence.geometry} material={materials.Tree_Fence_Sand_Material} />
-        <mesh geometry={nodes.Out_Door.geometry} material={materials.Tree_Fence_Sand_Material} />
-        <mesh geometry={nodes.Pant_Shirt_Hang.geometry} material={materials.Tree_Fence_Sand_Material} />
-        <mesh geometry={nodes.Sand_Stone.geometry} material={materials.Tree_Fence_Sand_Material} />
-        <mesh geometry={nodes.Tree.geometry} material={materials.Tree_Fence_Sand_Material} />
-        <mesh geometry={nodes.Tree6.geometry} material={materials.Tree_Fence_Sand_Material} />
-        <mesh geometry={nodes.Washroom.geometry} material={materials.Tree_Fence_Sand_Material} />
-        <mesh geometry={nodes.Water_Basket.geometry} material={materials.Tree_Fence_Sand_Material} />
-        <mesh geometry={nodes.Wood.geometry} material={materials.Tree_Fence_Sand_Material} />
+        
+        {/* Stage 1: Base ground always visible */}
+        <group>
+          <mesh geometry={nodes.Grass.geometry} material={materials.Plants_Grass_Fan_Material} />
+          <mesh geometry={nodes.Ground001.geometry} material={materials.Ground_Material} />
+        </group>
+
+        {/* Stage 2 */}
+        <motion.group {...popIn(2)}>
+          <mesh geometry={nodes.Plant_Sand.geometry} material={materials.Ground_Material} />
+          <mesh geometry={nodes.Sand_Stone.geometry} material={materials.Tree_Fence_Sand_Material} />
+        </motion.group>
+
+        {/* Stage 3 */}
+        <motion.group {...dropDown(3)}>
+          <mesh geometry={nodes.Road.geometry} material={materials.Ground_Material} />
+        </motion.group>
+
+        {/* Stage 4 */}
+        <motion.group {...popIn(4)}>
+          <mesh geometry={nodes.Cut_Tree.geometry} material={materials.Tree_Fence_Sand_Material} />
+          <mesh geometry={nodes.Wood.geometry} material={materials.Tree_Fence_Sand_Material} />
+        </motion.group>
+
+        {/* Stage 5 */}
+        <motion.group {...dropDown(5)}>
+          <mesh geometry={nodes.Tree.geometry} material={materials.Tree_Fence_Sand_Material} />
+        </motion.group>
+
+        {/* Stage 6 */}
+        <motion.group {...dropDown(6)}>
+          <mesh geometry={nodes.Tree6.geometry} material={materials.Tree_Fence_Sand_Material} />
+        </motion.group>
+
+        {/* Stage 7 */}
+        <motion.group {...popIn(7)}>
+          <mesh geometry={nodes.Big_Fan.geometry} material={materials.Plants_Grass_Fan_Material} />
+        </motion.group>
+
+        {/* Stage 8 */}
+        <motion.group {...popIn(8)}>
+          <mesh geometry={nodes.Plants.geometry} material={materials.Plants_Grass_Fan_Material} />
+        </motion.group>
+
+        {/* Stage 9 */}
+        <motion.group {...dropDown(9)}>
+          <mesh geometry={nodes.Well.geometry} material={materials.Bonfire_Well_Material} />
+        </motion.group>
+
+        {/* Stage 10 */}
+        <motion.group {...popIn(10)}>
+          <mesh geometry={nodes.Water_Basket.geometry} material={materials.Tree_Fence_Sand_Material} />
+        </motion.group>
+
+        {/* Stage 11 */}
+        <motion.group {...dropDown(11)}>
+          <mesh geometry={nodes.Water_Shower.geometry} material={materials.Bonfire_Well_Material} />
+        </motion.group>
+
+        {/* Stage 12 */}
+        <motion.group {...dropDown(12)}>
+          <mesh geometry={nodes.Washroom.geometry} material={materials.Tree_Fence_Sand_Material} />
+        </motion.group>
+
+        {/* Stage 13 */}
+        <motion.group {...dropDown(13)}>
+          <mesh geometry={nodes.Tent.geometry} material={materials.Tent_Hen_House_Material} />
+        </motion.group>
+
+        {/* Stage 14 */}
+        <motion.group {...popIn(14)}>
+          <mesh geometry={nodes.Bonfire.geometry} material={materials.Bonfire_Well_Material} />
+        </motion.group>
+
+        {/* Stage 15 */}
+        <motion.group {...popIn(15)}>
+          <mesh geometry={nodes.Lamp.geometry} material={materials.Tent_Hen_House_Material} />
+        </motion.group>
+
+        {/* Stage 16 */}
+        <motion.group {...popIn(16)}>
+          <mesh geometry={nodes.Shovel4.geometry} material={materials.Bonfire_Well_Material} />
+        </motion.group>
+
+        {/* Stage 17 */}
+        <motion.group {...popIn(17)}>
+          <mesh geometry={nodes.Pitch_Fork.geometry} material={materials.Tent_Hen_House_Material} />
+        </motion.group>
+
+        {/* Stage 18 */}
+        <motion.group {...popIn(18)}>
+          <mesh geometry={nodes.Trolley.geometry} material={materials.Bonfire_Well_Material} />
+        </motion.group>
+
+        {/* Stage 19 */}
+        <motion.group {...dropDown(19)}>
+          <mesh geometry={nodes.Fence.geometry} material={materials.Tree_Fence_Sand_Material} />
+        </motion.group>
+
+        {/* Stage 20 */}
+        <motion.group {...dropDown(20)}>
+          <mesh geometry={nodes.Hen_House.geometry} material={materials.Tent_Hen_House_Material} />
+          <mesh geometry={nodes.Hen.geometry} material={materials.Bonfire_Well_Material} />
+        </motion.group>
+
+        {/* Stage 21 */}
+        <motion.group {...popIn(21)}>
+          <mesh geometry={nodes.Horse.geometry} material={materials.Horse_Material} />
+        </motion.group>
+
+        {/* Stage 22 */}
+        <motion.group {...dropDown(22)}>
+          <mesh geometry={nodes.House_Part.geometry} material={materials.Ground_Material} />
+        </motion.group>
+
+        {/* Stage 23 */}
+        <motion.group {...dropDown(23)}>
+          <mesh geometry={nodes.Part.geometry} material={materials.Tent_Hen_House_Material} />
+        </motion.group>
+
+        {/* Stage 24 */}
+        <motion.group {...dropDown(24)}>
+          <mesh geometry={nodes.House.geometry} material={materials.House_Material} />
+          <mesh geometry={nodes.Out_Door.geometry} material={materials.Tree_Fence_Sand_Material} />
+        </motion.group>
+
+        {/* Stage 25 */}
+        <motion.group {...popIn(25)}>
+          <mesh geometry={nodes.Pant_Shirt_Hang.geometry} material={materials.Tree_Fence_Sand_Material} />
+        </motion.group>
+
+        {/* Stage 26 */}
+        <motion.group {...dropDown(26)}>
+          <mesh geometry={nodes.Farm_House.geometry} material={materials.Farm_House_Material} />
+        </motion.group>
+
       </group>
     </group>
   )
 }
 
 useGLTF.preload('/homestead_main.glb')
+
