@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment, useTexture } from "@react-three/drei";
 import { Suspense } from "react";
 import * as THREE from "three"; // You will need to import THREE
-import { Model } from "./HomesteadMain";
+import { Model } from "./Homestead";
 
 // 1. Create a helper component to load the PNG texture
 function CustomEnvironment() {
