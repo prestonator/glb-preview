@@ -3,6 +3,7 @@ import { OrbitControls, Environment, useTexture } from "@react-three/drei";
 import { Suspense } from "react";
 import * as THREE from "three"; // You will need to import THREE
 import { Model } from "./Homestead";
+import { Model as ModelTimeline } from "./HomesteadTimeline";
 
 // 1. Create a helper component to load the PNG texture
 function CustomEnvironment() {
@@ -25,13 +26,18 @@ function CustomEnvironment() {
 interface SceneProps {
   useCustomEnv?: boolean;
   currentStage?: number;
+  modelType?: "26-stage" | "4-stage";
 }
 
-export function Scene({ useCustomEnv = true, currentStage = 1 }: SceneProps) {
+export function Scene({ useCustomEnv = true, currentStage = 1, modelType = "26-stage" }: SceneProps) {
   return (
     <Canvas camera={{ position: [40, 28, 58], fov: 50 }}>
       <Suspense fallback={null}>
-        <Model currentStage={currentStage} />
+        {modelType === "26-stage" ? (
+          <Model currentStage={currentStage} />
+        ) : (
+          <ModelTimeline />
+        )}
 
         {useCustomEnv ? <CustomEnvironment /> : <Environment preset="forest" />}
       </Suspense>

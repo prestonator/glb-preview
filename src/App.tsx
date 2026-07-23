@@ -5,6 +5,7 @@ import "./index.css"; // Import the global styles we updated
 function App() {
   const [useCustomEnv, setUseCustomEnv] = useState(true);
   const [currentStage, setCurrentStage] = useState(1);
+  const [modelType, setModelType] = useState<"26-stage" | "4-stage">("26-stage");
   const totalStages = 26;
 
   const nextStage = () => {
@@ -24,7 +25,7 @@ function App() {
         flexDirection: "column",
       }}
     >
-      <Scene useCustomEnv={useCustomEnv} currentStage={currentStage} />
+      <Scene useCustomEnv={useCustomEnv} currentStage={currentStage} modelType={modelType} />
       <div
         style={{
           position: "absolute",
@@ -39,7 +40,7 @@ function App() {
       >
         <h1 style={{ margin: 0, fontSize: "24px" }}>Homestead Model Preview</h1>
         <p style={{ margin: "5px 0", fontSize: "14px", opacity: 0.8 }}>
-          Drag to rotate, scroll to zoom. Stage {currentStage} / {totalStages}
+          Drag to rotate, scroll to zoom. {modelType === "26-stage" ? `Stage ${currentStage} / ${totalStages}` : "4-Stage Timeline"}
         </p>
         <div style={{ pointerEvents: "auto", marginTop: "10px", display: "flex", flexDirection: "column", gap: "10px" }}>
           <label
@@ -60,36 +61,68 @@ function App() {
             />
             Custom Environment
           </label>
+
           <div style={{ display: "flex", gap: "10px" }}>
             <button 
-              onClick={prevStage}
-              disabled={currentStage === 1}
+              onClick={() => setModelType("26-stage")}
               style={{
                 padding: "8px 12px",
-                backgroundColor: currentStage === 1 ? "#555" : "#333",
+                backgroundColor: modelType === "26-stage" ? "#007bff" : "#333",
                 color: "white",
                 border: "1px solid #666",
                 borderRadius: "4px",
-                cursor: currentStage === 1 ? "default" : "pointer",
+                cursor: "pointer",
               }}
             >
-              Previous Stage
+              26-Stage Animation
             </button>
             <button 
-              onClick={nextStage}
-              disabled={currentStage === totalStages}
+              onClick={() => setModelType("4-stage")}
               style={{
                 padding: "8px 12px",
-                backgroundColor: currentStage === totalStages ? "#555" : "#333",
+                backgroundColor: modelType === "4-stage" ? "#007bff" : "#333",
                 color: "white",
                 border: "1px solid #666",
                 borderRadius: "4px",
-                cursor: currentStage === totalStages ? "default" : "pointer",
+                cursor: "pointer",
               }}
             >
-              Next Stage
+              4-Stage Animation
             </button>
           </div>
+
+          {modelType === "26-stage" && (
+            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+              <button 
+                onClick={prevStage}
+                disabled={currentStage === 1}
+                style={{
+                  padding: "8px 12px",
+                  backgroundColor: currentStage === 1 ? "#555" : "#333",
+                  color: "white",
+                  border: "1px solid #666",
+                  borderRadius: "4px",
+                  cursor: currentStage === 1 ? "default" : "pointer",
+                }}
+              >
+                Previous Stage
+              </button>
+              <button 
+                onClick={nextStage}
+                disabled={currentStage === totalStages}
+                style={{
+                  padding: "8px 12px",
+                  backgroundColor: currentStage === totalStages ? "#555" : "#333",
+                  color: "white",
+                  border: "1px solid #666",
+                  borderRadius: "4px",
+                  cursor: currentStage === totalStages ? "default" : "pointer",
+                }}
+              >
+                Next Stage
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
