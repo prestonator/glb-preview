@@ -2,8 +2,9 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment, useTexture } from "@react-three/drei";
 import { Suspense } from "react";
 import * as THREE from "three"; // You will need to import THREE
-import { Model } from "./Homestead";
+import { Model } from "./Homestead2";
 import { Model as ModelTimeline } from "./HomesteadTimeline";
+import { CameraLogger } from './CamLogger';
 
 // 1. Create a helper component to load the PNG texture
 function CustomEnvironment() {
@@ -31,7 +32,7 @@ interface SceneProps {
 
 export function Scene({ useCustomEnv = true, currentStage = 1, modelType = "26-stage" }: SceneProps) {
   return (
-    <Canvas camera={{ position: [40, 28, 58], fov: 50 }}>
+    <Canvas camera={{ position: [30, 8, 44], fov: 50 }}>
       <Suspense fallback={null}>
         {modelType === "26-stage" ? (
           <Model currentStage={currentStage} />
@@ -44,6 +45,8 @@ export function Scene({ useCustomEnv = true, currentStage = 1, modelType = "26-s
 
       {/* Free orbit controls */}
       <OrbitControls makeDefault />
+      {/* Camera logger */}
+      <CameraLogger />
     </Canvas>
   );
 }

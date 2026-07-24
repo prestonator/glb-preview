@@ -7,7 +7,6 @@ import gsap from "gsap";
 type GLTFResult = GLTF & {
   nodes: {
     tree: THREE.Mesh;
-    rocks: THREE.Mesh;
     green: THREE.Mesh;
     Bonfire: THREE.Mesh;
     Hen: THREE.Mesh;
@@ -43,8 +42,7 @@ type GLTFResult = GLTF & {
   };
   materials: {
     Tree_Fence_Sand_Material: THREE.MeshStandardMaterial;
-    ["Tree_Fence_Sand_Material.001"]: THREE.MeshStandardMaterial;
-    Material: THREE.MeshStandardMaterial;
+    ["Material.001"]: THREE.MeshStandardMaterial;
     Bonfire_Well_Material: THREE.MeshStandardMaterial;
     Farm_House_Material: THREE.MeshStandardMaterial;
     Ground_Material: THREE.MeshStandardMaterial;
@@ -58,7 +56,7 @@ type GLTFResult = GLTF & {
 
 export function Model({ ...props }: any) {
   const { nodes, materials } = useGLTF(
-    "/homestead-transformed.glb"
+    "/homestead2-transformed.glb"
   ) as unknown as GLTFResult;
 
   // Strongly typed refs for each animation stage
@@ -126,8 +124,7 @@ export function Model({ ...props }: any) {
         <mesh geometry={nodes.Ground001.geometry} material={materials.Ground_Material} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
         <mesh geometry={nodes.Road.geometry} material={materials.Ground_Material} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
         <mesh geometry={nodes.tree.geometry} material={materials.Tree_Fence_Sand_Material} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
-        <mesh geometry={nodes.rocks.geometry} material={materials["Tree_Fence_Sand_Material.001"]} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
-        <mesh geometry={nodes.green.geometry} material={materials.Material} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
+        <mesh geometry={nodes.green.geometry} material={materials["Material.001"]} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
         <mesh geometry={nodes.Plant_Sand.geometry} material={materials.Ground_Material} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
         <mesh geometry={nodes.Grass.geometry} material={materials.Plants_Grass_Fan_Material} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
         <mesh geometry={nodes.Plants.geometry} material={materials.Plants_Grass_Fan_Material} rotation={[Math.PI / 2, 0, 0]} scale={0.01} />
@@ -174,4 +171,4 @@ export function Model({ ...props }: any) {
   );
 }
 
-useGLTF.preload("/homestead-transformed.glb");
+useGLTF.preload("/homestead2-transformed.glb");
