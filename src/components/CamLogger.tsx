@@ -5,7 +5,7 @@ export function CameraLogger() {
   const { camera } = useThree()
 
   useEffect(() => {
-    const logCameraInfo = (e) => {
+    const logCameraInfo = (e: KeyboardEvent) => {
       // Press 'c' to log the camera position
       if (e.key === 'c') {
         console.log('Camera Position:', [
