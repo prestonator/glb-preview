@@ -41,7 +41,7 @@ export function Scene({
       <directionalLight
         castShadow
         position={[-390, 220, -396]} // Position it high and to an angle
-        intensity={1.5}
+        intensity={1}
         shadow-mapSize={[2048, 2048]} // Increases shadow resolution
       >
         {/* These define the "volume" the sun covers. Increase if shadows get clipped */}
