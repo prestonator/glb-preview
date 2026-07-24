@@ -37,18 +37,17 @@ export function Scene({
 }: SceneProps) {
   return (
     <Canvas shadows camera={{ position: [30, 8, 44], fov: 50 }}>
-      <ambientLight intensity={0.1} />
+      <ambientLight intensity={0.3} color="#4a4a6a" />
       <directionalLight
         castShadow
-        position={[-390, 220, -396]} // Position it high and to an angle
-        intensity={1}
-        shadow-mapSize={[2048, 2048]} // Increases shadow resolution
+        color="#ff8c42" // Classic golden-hour orange
+        position={[-50, 20, -40]} // Y lowered from 30 to 10 for long, stretching shadows
+        intensity={2.5} // Bumped up slightly to punch through the warm colors
+        shadow-mapSize={[2048, 2048]}
+        shadow-bias={-0.0005}
       >
         {/* These define the "volume" the sun covers. Increase if shadows get clipped */}
-        <orthographicCamera
-          attach="shadow-camera"
-          args={[-25, 25, 25, -25]}
-        />
+        <orthographicCamera attach="shadow-camera" args={[-30, 30, 30, -30]} />
       </directionalLight>
       <Suspense fallback={null}>
         {modelType === "26-stage" ? (
@@ -57,7 +56,7 @@ export function Scene({
           <ModelTimeline />
         )}
 
-        {useCustomEnv ? <CustomEnvironment /> : <Environment preset="forest" />}
+        {useCustomEnv ? <CustomEnvironment /> : <Environment preset="sunset" />}
       </Suspense>
 
       {/* Free orbit controls */}
