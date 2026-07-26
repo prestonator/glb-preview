@@ -5,11 +5,16 @@ import * as THREE from "three";
 import { Model } from "./Homestead2";
 import { Model as ModelTimeline } from "./HomesteadTimeline";
 import { CameraLogger } from "./CamLogger";
-import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
-
+import {
+  ToneMapping,
+  EffectComposer,
+  Bloom,
+  Vignette
+} from "@react-three/postprocessing";
+import { ToneMappingMode } from "postprocessing";
 // 1. Create a helper component to load the PNG texture
 function CustomEnvironment() {
-  const texture = useTexture("/bgSky.png");
+  const texture = useTexture("/bgSky2.png");
   texture.mapping = THREE.EquirectangularReflectionMapping;
 
   return (
@@ -34,7 +39,6 @@ export function Scene({
   return (
     <Canvas shadows camera={{ position: [30, 8, 44], fov: 50 }}>
       {/* Lighting Setup */}
-      <ambientLight intensity={0.3} color="#4a4a6a" />
       <directionalLight
         castShadow
         color="#ff8c42" // Classic golden-hour orange
@@ -63,27 +67,26 @@ export function Scene({
 
       {/* 2. Add the Post-Processing Pipeline */}
       <EffectComposer enableNormalPass={false}>
+
+        {/* 
+          ToneMapping: 
+          - mode: Controls how the colors are mapped to the screen 
+          - good modes:LINEAR,NEUTRAL
+        */}
+        <ToneMapping mode={ToneMappingMode.NEUTRAL} />
         {/* 
           Bloom: 
           - luminanceThreshold: Controls how bright something must be to glow. (1+ prevents the whole screen from glowing)
           - mipmapBlur: Creates a very smooth, cinematic glow rather than a harsh blur
           - intensity: How strong the glow is
         */}
-        <Bloom 
-          luminanceThreshold={1.2} 
-          mipmapBlur 
-          intensity={0.5} 
-        />
-        
+        <Bloom luminanceThreshold={1.2} mipmapBlur intensity={0.5} />
+
         {/* 
           Vignette: 
           - offset & darkness: Controls the size and opacity of the darkened edges 
         */}
-        <Vignette 
-          eskil={false} 
-          offset={0.1} 
-          darkness={0.9} 
-        />
+        <Vignette eskil={false} offset={0.05} darkness={0.9} />
       </EffectComposer>
     </Canvas>
   );
