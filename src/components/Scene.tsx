@@ -14,13 +14,13 @@ import {
 import { ToneMappingMode } from "postprocessing";
 // 1. Create a helper component to load the PNG texture
 function CustomEnvironment() {
-  const texture = useTexture("/bgSky2.png");
+  const texture = useTexture("/bgSky3.png");
   texture.mapping = THREE.EquirectangularReflectionMapping;
 
   return (
     <>
       <Environment preset="forest" />
-      <Environment map={texture} background="only" blur={0.05} />
+      <Environment map={texture} background="only" blur={0.05} backgroundRotation={[0, Math.PI, 0]} />
     </>
   );
 }
@@ -37,12 +37,12 @@ export function Scene({
   modelType = "26-stage",
 }: SceneProps) {
   return (
-    <Canvas shadows camera={{ position: [30, 8, 44], fov: 50 }}>
+    <Canvas shadows camera={{ position: [30, 8, 44], fov: 60 }}>
       {/* Lighting Setup */}
       <directionalLight
         castShadow
         color="#ff8c42" // Classic golden-hour orange
-        position={[-50, 20, -40]} // Y lowered from 30 to 10 for long, stretching shadows
+        position={[-50, 25, -50]} // Y lowered from 30 to 10 for long, stretching shadows
         intensity={2.5} // Bumped up slightly to punch through the warm colors
         shadow-mapSize={[2048, 2048]}
         shadow-bias={-0.0005}
@@ -80,7 +80,7 @@ export function Scene({
           - mipmapBlur: Creates a very smooth, cinematic glow rather than a harsh blur
           - intensity: How strong the glow is
         */}
-        <Bloom luminanceThreshold={1.2} mipmapBlur intensity={0.5} />
+        <Bloom luminanceThreshold={1.3} mipmapBlur intensity={0.5} />
 
         {/* 
           Vignette: 
