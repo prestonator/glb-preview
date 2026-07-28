@@ -9,10 +9,11 @@ import {
   ToneMapping,
   EffectComposer,
   Bloom,
-  Vignette
+  Vignette,
+  Noise // 1. Imported Noise
 } from "@react-three/postprocessing";
 import { ToneMappingMode } from "postprocessing";
-// 1. Create a helper component to load the PNG texture
+
 function CustomEnvironment() {
   const texture = useTexture("/bgSky3.png");
   texture.mapping = THREE.EquirectangularReflectionMapping;
@@ -41,51 +42,38 @@ export function Scene({
       {/* Lighting Setup */}
       <directionalLight
         castShadow
-        color="#ff8c42" // Classic golden-hour orange
-        position={[-50, 25, -50]} // Y lowered from 30 to 10 for long, stretching shadows
-        intensity={2.5} // Bumped up slightly to punch through the warm colors
+        color="#ff8c42" 
+        position={[-50, 10, -50]} // Lowered Y to 10 for longer, sweeping shadows
+        intensity={2.5} 
         shadow-mapSize={[2048, 2048]}
         shadow-bias={-0.0005}
       >
-        {/* These define the "volume" the sun covers. Increase if shadows get clipped */}
-        <orthographicCamera attach="shadow-camera" args={[-30, 30, 30, -30]} />
+        {/* Added near (0.1) and far (500) planes to prevent shadow depth clipping */}
+        <orthographicCamera attach="shadow-camera" args={[-40, 40, 40, -40, 0.1, 500]} />
       </directionalLight>
+
       <Suspense fallback={null}>
         {modelType === "26-stage" ? (
           <Model currentStage={currentStage} />
         ) : (
           <ModelTimeline />
         )}
-
         {useCustomEnv ? <CustomEnvironment /> : <Environment preset="sunset" />}
       </Suspense>
 
-      {/* Free orbit controls */}
       <OrbitControls makeDefault />
-      {/* Camera logger */}
       <CameraLogger />
 
-      {/* 2. Add the Post-Processing Pipeline */}
+      {/* Post-Processing Pipeline */}
       <EffectComposer enableNormalPass={false}>
-
-        {/* 
-          ToneMapping: 
-          - mode: Controls how the colors are mapped to the screen 
-          - good modes:LINEAR,NEUTRAL
-        */}
+        {/* ACES_FILMIC is the industry standard for mapping high-contrast lighting */}
         <ToneMapping mode={ToneMappingMode.NEUTRAL} />
-        {/* 
-          Bloom: 
-          - luminanceThreshold: Controls how bright something must be to glow. (1+ prevents the whole screen from glowing)
-          - mipmapBlur: Creates a very smooth, cinematic glow rather than a harsh blur
-          - intensity: How strong the glow is
-        */}
-        <Bloom luminanceThreshold={1.3} mipmapBlur intensity={0.5} />
+        
+        <Bloom luminanceThreshold={1.1} mipmapBlur intensity={0.5} />
+        
+        {/* Subtle film grain ties the gradients together and prevents color banding */}
+        <Noise opacity={0.03} />
 
-        {/* 
-          Vignette: 
-          - offset & darkness: Controls the size and opacity of the darkened edges 
-        */}
         <Vignette eskil={false} offset={0.05} darkness={0.9} />
       </EffectComposer>
     </Canvas>
