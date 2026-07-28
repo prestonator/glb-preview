@@ -105,6 +105,12 @@ export function Model({ currentStage = 1, ...props }: any) {
             geometry={nodes.Road.geometry}
             material={materials.Ground_Material}
           />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Sand_Stone.geometry}
+            material={materials.Tree_Fence_Sand_Material}
+          />
         </group>
 
         {/* Stage 2 */}
